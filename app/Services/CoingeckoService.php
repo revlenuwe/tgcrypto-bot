@@ -28,7 +28,7 @@ class CoingeckoService
             return false;
         }
 
-        $from = $this->getIdFromSymbol($from);
+        $from = $this->getCoinBySymbol($from);
 
         $data = $this->client->simple()->getPrice($from['id'], $to);
 
@@ -50,7 +50,7 @@ class CoingeckoService
         $allMarkets = $this->client->coins()->getMarkets($currency);
 
         if($cryptoCurrency) {
-            if(!$this->supportConversion($cryptoCurrency)) {
+            if(!$this->isCoinSupported($cryptoCurrency)) {
                 return false;//exception
             }
 
@@ -72,14 +72,32 @@ class CoingeckoService
         return in_array($to, $supportedCurrencies);
     }
 
-    private function getIdFromSymbol($currencySymbol) {
+    /**
+     * @param $coinSymbol
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCoinSupported($coinSymbol) : bool
+    {
         $coinsList = collect($this->client->coins()->getList());
 
-        if(!$coinsList->contains('symbol', $currencySymbol)) {
+        return $coinsList->contains('symbol', $coinSymbol);
+    }
+
+    /**
+     * @param $coinSymbol
+     * @return false|mixed
+     * @throws \Exception
+     */
+    private function getCoinBySymbol($coinSymbol)
+    {
+        $coinsList = collect($this->client->coins()->getList());
+
+        if(!$coinsList->contains('symbol', $coinSymbol)) {
             return false;
         }
 
-        return $coinsList->firstWhere('symbol', $currencySymbol);
+        return $coinsList->firstWhere('symbol', $coinSymbol);
     }
 
 }

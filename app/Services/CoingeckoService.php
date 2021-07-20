@@ -28,13 +28,15 @@ class CoingeckoService
             return false;
         }
 
-        $data = $this->client->simple()->getPrice($from, $to);
+        $from = $this->getIdFromSymbol($from);
+
+        $data = $this->client->simple()->getPrice($from['id'], $to);
 
         if (!$amount) {
-            return $data[$from][$to];
+            return $data[$from['id']][$to];
         }
 
-        return $data[$from][$to] * $amount;
+        return $data[$from['id']][$to] * $amount;
     }
 
     /**
@@ -68,6 +70,16 @@ class CoingeckoService
         $supportedCurrencies = $this->client->simple()->getSupportedVsCurrencies();
 
         return in_array($to, $supportedCurrencies);
+    }
+
+    private function getIdFromSymbol($currencySymbol) {
+        $coinsList = collect($this->client->coins()->getList());
+
+        if(!$coinsList->contains('symbol', $currencySymbol)) {
+            return false;
+        }
+
+        return $coinsList->firstWhere('symbol', $currencySymbol);
     }
 
 }

@@ -32,20 +32,23 @@ class PriceCommand extends Command
      */
     public function handle()
     {
-        $data = $this->gecko->getCoinData($this->getArguments()['currency']);
+        $currency = !empty($this->getArguments()) ? $this->getArguments()['currency'] : config('crypto-bot.main_currency');
+
+        $data = $this->gecko->getCoinData($currency);
+
+        if(!$data) {
+            return $this->replyWithMessage([
+                'text' => 'Currency is not supported'
+            ]);
+        }
 
         //temp
         $symbol = strtoupper($data['symbol']);
         $roundedPrice = round($data['current_price'],4);
         $roundedPercentage = round($data['price_change_percentage_24h'],3);
 
-        $text = "<b>".$symbol."</b>: $". $roundedPrice ." (".$roundedPercentage."%)\n24h: Low $".$data['low_24h'].' | High $'.$data['high_24h'] . "\n\n";
+        $text = "<b>".$symbol."</b>: $". $roundedPrice ." (".$roundedPercentage."%)\n<em>24h: Low $".$data['low_24h'].' | High $'.$data['high_24h'] . "</em>\n\n";
 
-        if(!$data) {
-            $this->replyWithMessage([
-                'text' => 'Currency is not supported'
-            ]);
-        }
 
         $this->replyWithMessage([
             'text' => $text,

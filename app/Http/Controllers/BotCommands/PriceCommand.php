@@ -4,11 +4,14 @@ namespace App\Http\Controllers\BotCommands;
 
 use App\Services\CoingeckoService;
 use App\Services\GeckoApiService;
+use App\Traits\BotMessageFormatter;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
 
 class PriceCommand extends Command
 {
+
+    use BotMessageFormatter;
     /**
      * @var string Command Name
      */
@@ -42,16 +45,10 @@ class PriceCommand extends Command
             ]);
         }
 
-        //temp
-        $symbol = strtoupper($data['symbol']);
-        $roundedPrice = round($data['current_price'],4);
-        $roundedPercentage = round($data['price_change_percentage_24h'],3);
-
-        $text = "<b>".$symbol."</b>: $". $roundedPrice ." (".$roundedPercentage."%)\n<em>24h: Low $".$data['low_24h'].' | High $'.$data['high_24h'] . "</em>\n\n";
-
+        $message = $this->coinInfoMessage($data);
 
         $this->replyWithMessage([
-            'text' => $text,
+            'text' => $message,
             'parse_mode' => 'html'
         ]);
     }

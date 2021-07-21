@@ -24,11 +24,11 @@ class CoingeckoService
      */
     public function convertCurrency(string $from, string $to, float $amount = null)
     {
-        if (!$this->supportConversion($to)) {
+        $from = $this->getCoinBySymbol($from);
+
+        if (!$this->supportConversion($to) || !$from) {
             return false;
         }
-
-        $from = $this->getCoinBySymbol($from);
 
         $data = $this->client->simple()->getPrice($from['id'], $to);
 

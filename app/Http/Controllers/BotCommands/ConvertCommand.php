@@ -36,7 +36,7 @@ class ConvertCommand extends Command
         $price = $this->gecko->convertCurrency($arguments['from'], $arguments['to'], $arguments['amount']);
 
         if(!$price) {
-            $this->replyWithMessage([
+            return $this->replyWithMessage([
                 'text' => 'Unable to convert currency'
             ]);
         }

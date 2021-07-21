@@ -9,5 +9,17 @@ return [
 
     'schedule' => [
         'price_notification' => true,
+
+        /**
+         * everyMinute
+         * everyFiveMinutes
+         * everyTenMinutes
+         * everyThirtyMinutes
+         * hourly
+         * everySixHours
+         * daily
+         */
+
+        'price_notification_delay' => 'everyMinute',
     ]
 ];

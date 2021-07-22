@@ -44,6 +44,7 @@ class ConvertCommand extends Command
         $arguments = $this->getArguments();
 
         $price = $this->gecko->convertCurrency($arguments['from'], $arguments['to'], $arguments['amount']);
+        $arguments['price'] = $price;
 
         if(!$price) {
             return $this->replyWithMessage([
@@ -51,10 +52,10 @@ class ConvertCommand extends Command
             ]);
         }
 
-        $text = $arguments['amount'] ." ".strtoupper($arguments['from'])." = ". number_format($price, 2,',',' ')." ". strtoupper($arguments['to']);
+        $message = $this->convertInfoMessage($arguments);
 
         $this->replyWithMessage([
-            'text' => $text
+            'text' => $message
         ]);
     }
 }

@@ -51,7 +51,7 @@ class BalanceCommand extends Command
             ]);
         }
 
-        $message = "<b>Address: </b><code>".$data['address']."</code>\nCurrent balance: <code>".$data['balance']."</code>\nSpent: <code>".$data['spent']."</code>\nReceived: <code>".$data['received']."</code>\nTransactions: <code>".$data['transactions_count']."</code>";
+        $message = $this->transactionInfoMessage($data);
 
         $this->replyWithMessage([
             'text' => $message,

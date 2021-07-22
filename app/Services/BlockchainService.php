@@ -8,7 +8,6 @@ use Blockchain\Blockchain;
 
 class BlockchainService
 {
-
     protected $client;
 
     public function __construct()
@@ -36,6 +35,7 @@ class BlockchainService
         }
 
         return [
+            'address' => $data->address,
             'spent' => $data->total_sent,
             'received' => $data->total_received,
             'balance' => $data->final_balance,

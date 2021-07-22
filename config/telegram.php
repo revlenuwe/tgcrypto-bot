@@ -41,6 +41,7 @@ return [
                 App\Http\Controllers\BotCommands\StartCommand::class,
                 App\Http\Controllers\BotCommands\PriceCommand::class,
                 App\Http\Controllers\BotCommands\ConvertCommand::class,
+                App\Http\Controllers\BotCommands\BalanceCommand::class,
             ],
         ],
 

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\BotCommands;
 
 use App\Services\CoingeckoService;
+use App\Traits\HasArguments;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
 
 class ConvertCommand extends Command
 {
+
+    use HasArguments;
     /**
      * @var string Command Name
      */
@@ -31,6 +34,8 @@ class ConvertCommand extends Command
      */
     public function handle()
     {
+        $this->checkArguments();
+
         $arguments = $this->getArguments();
 
         $price = $this->gecko->convertCurrency($arguments['from'], $arguments['to'], $arguments['amount']);

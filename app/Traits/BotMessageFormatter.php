@@ -19,4 +19,9 @@ trait BotMessageFormatter
 
         return "<b>" . $symbol . "</b>: $" . $roundedPrice . " (" . $roundedPercentage . "%)\n24h: Low $" . $data['low_24h'] . ' | High $' . $data['high_24h'] . "\n\n";
     }
+
+    public function missArgumentsMessage() : string
+    {
+        return 'Some arguments are missing';
+    }
 }

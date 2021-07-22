@@ -7,6 +7,8 @@ return [
 
     'notifications_telegram_id' => null,
 
+    'store_messages' => true,
+
     'schedule' => [
         'price_notification' => true,
 

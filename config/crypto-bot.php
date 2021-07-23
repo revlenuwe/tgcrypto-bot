@@ -9,6 +9,8 @@ return [
 
     'store_messages' => true,
 
+    'webhook_url' => '/bot/webhook',
+
     'schedule' => [
         'price_notification' => true,
 

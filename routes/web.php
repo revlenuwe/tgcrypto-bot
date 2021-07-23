@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/bot/webhook', [BotHandleController::class, 'webhook']);
+Route::post(config('crypto-bot.webhook_url'), [BotHandleController::class, 'webhook']);

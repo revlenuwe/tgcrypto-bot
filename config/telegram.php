@@ -38,18 +38,9 @@ return [
             'certificate_path'    => env('TELEGRAM_CERTIFICATE_PATH', 'YOUR-CERTIFICATE-PATH'),
             'webhook_url'         => env('TELEGRAM_WEBHOOK_URL', 'YOUR-BOT-WEBHOOK-URL'),
             'commands'            => [
-                App\Http\Controllers\BotCommands\StartCommand::class,
-                App\Http\Controllers\BotCommands\PriceCommand::class,
-                App\Http\Controllers\BotCommands\ConvertCommand::class,
-                App\Http\Controllers\BotCommands\BalanceCommand::class,
-                App\Http\Controllers\BotCommands\ToBtcCommand::class,
+                //...
             ],
         ],
-
-        //        'mySecondBot' => [
-        //            'username'  => 'AnotherTelegram_Bot',
-        //            'token' => '123456:abc',
-        //        ],
     ],
 
     /*
@@ -120,7 +111,11 @@ return [
     |
     */
     'commands'                     => [
-        Telegram\Bot\Commands\HelpCommand::class,
+        App\Http\Controllers\BotCommands\StartCommand::class,
+        App\Http\Controllers\BotCommands\PriceCommand::class,
+        App\Http\Controllers\BotCommands\ConvertCommand::class,
+        App\Http\Controllers\BotCommands\BalanceCommand::class,
+        App\Http\Controllers\BotCommands\ToBtcCommand::class,
     ],
 
     /*

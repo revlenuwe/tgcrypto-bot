@@ -32,6 +32,6 @@ trait BotMessageFormatter
 
     public function convertInfoMessage(array $data) : string
     {
-        return $data['amount'] ." ".strtoupper($data['from'])." = ". number_format($data['price'], 2,',',' ')." ". strtoupper($data['to']);
+        return $data['amount'] ." ".strtoupper($data['from'])." = ".$data['price']." ". strtoupper($data['to']);
     }
 }

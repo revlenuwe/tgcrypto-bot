@@ -1,62 +1,213 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Telegram crypto rates bot
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+T.G.C.R. is a fairly small bot that can be scaled to suit your needs.
+To obtain data, the `codenix-sv/coingecko-api` and `blockchain/blockchain` libraries were used
 
-## About Laravel
+## Getting started
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Download source via Git
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```bash
+git clone https://github.com/revlenuwe/tgcrypto-bot.git
+```
+Run composer to install dependencies
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+composer install
+```
 
-## Learning Laravel
+## Configuration
+By default, project comes with a `.env.example` file. You'll need to rename this file to just `.env`.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Database
+```bash
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=database
+DB_USERNAME=username
+DB_PASSWORD=password
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+After you changed the env values you can run the command:
+```bash
+php artisan migrate
+```
+**Remember:** Create the database before run artisan command
 
-## Laravel Sponsors
+### General
+Set your Telegram bot token:
+```bash
+TELEGRAM_BOT_TOKEN=your_token
+```
+After setting the token, you need to add a webhook, to set it you can simply follow the link:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+[https://api.telegram.org/botBOT_TOKEN/setWebhook?url=https://yoursite.example/bot/webhook]()
 
-### Premium Partners
+The handler path `/bot/webhook` is set by default, but you can change it in `config/crypto-bot.php`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+**The second option for installing the webhook is the command:**
+```bash
+php artisan bot:webhook https://yoursite.example/bot/webhook
+```
+Where  `https://yoursite.example/` is the domain of your site
+### Advanced bot settings
+In the `config/crypto-bot.php` config file you can configure some additional bot functions
+
+```php
+/**
+    |--------------------------------------------------------------------------
+    | Welcome message
+    |--------------------------------------------------------------------------
+    |
+    | This text will be shown to every new user when entering the command /start
+    |
+    */
+
+    'welcome_text' => 'Test',
+
+    /**
+    |--------------------------------------------------------------------------
+    | Main currency
+    |--------------------------------------------------------------------------
+    |
+    | Option to configure the main cryptocurrency, so far only used for the
+    | standard argument of the command /price and notifications
+    |
+    */
+
+    'main_currency' => 'btc',
+
+    /**
+    |--------------------------------------------------------------------------
+    | Storing messages
+    |--------------------------------------------------------------------------
+    |
+    | This option is responsible for saving user messages in database.
+    | If the variable is set to true, then all messages will be saved
+    | to the messages table.
+    |
+    */
+
+    'store_messages' => true,
+    
+    /**
+    |--------------------------------------------------------------------------
+    | Webhook handler url (for route)
+    |--------------------------------------------------------------------------
+    |
+    | Here you can declare the URL at which the handler for the telegram
+    | webhook will be available.
+    | When the url changes, you must set the telegram
+    | webhook to https://yourdomain.example/WEBHOOK_HANDLER_URL
+    |
+    */
+
+    'webhook_handler_url' => '/bot/webhook',
+];
+```
+#### Notifications
+
+The bot has a setting for notifications that runs on [Laravel's Scheduler](https://laravel.com/docs/8.x/scheduling)
+
+```php
+'schedule' => [
+
+        /**
+        |--------------------------------------------------------------------------
+        | Recipient of notifications
+        |--------------------------------------------------------------------------
+        |
+        | User or group chat ID that will receive endless cryptocurrency price
+        | notifications.
+        | To get your telegram ID you can use @getmyid_bot
+        |
+        */
+
+        'notifications_telegram_id' => null,
+
+        /**
+        |--------------------------------------------------------------------------
+        | Main currency price notification
+        |--------------------------------------------------------------------------
+        |
+        | Here you can enable the notification of the price of the main
+        | cryptocurrency.
+        | Notifications will not work if the recipient chat ID is invalid
+        |
+        */
+
+        'price_notification' => true,
+
+        /**
+        |--------------------------------------------------------------------------
+        | Notification delay
+        |--------------------------------------------------------------------------
+        |
+        | In this variable you can set the delay between price notifications
+        | Choose one of the possible values:
+        | "everyMinute", "everyFiveMinutes", "everyTenMinutes",
+        | "everyThirtyMinutes", "hourly", "everySixHours", "daily"
+        |
+        */
+
+        'price_notification_delay' => 'everyMinute',
+    ]
+];
+```
+For notifications to work correctly, you'll need to add the following **cron** entry to your server:
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+# Commands preview
+![Commands](https://i.imgur.com/2qDT9ok.png)
+# For developers
+To create new commands for the bot, you can use the command:
+```bash
+php artisan make:bot-command TestCommand
+```
+The template of the created command in `app/Http/Controllers/BotCommands/` looks like this:
+```php
+<?php
+
+namespace App\Http\Controllers\BotCommands;
+
+use Telegram\Bot\Actions;
+use Telegram\Bot\Commands\Command;
+
+class TestCommand extends Command
+{
+    /**
+     * @var string Command Name
+     */
+    protected $name = "test";
+
+    /**
+     * @var string Command Description
+     */
+    protected  $description = "...";
+
+    /**
+     * @inheritdoc
+     */
+    public function handle()
+    {
+        
+    }
+}
+```
+**After creating a command, it must be registered in `config/telegram.php`**
+
+```php
+'commands' => [
+        //..
+        App\Http\Controllers\BotCommands\TestCommand::class,
+ ],
+```
 
 ## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
 ## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[MIT](https://choosealicense.com/licenses/mit/)
